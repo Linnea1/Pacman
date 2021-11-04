@@ -10,11 +10,13 @@ using Microsoft.Xna.Framework.Content;
 
 namespace Packman
 {
-    class TextureManager
+    public static class TextureManager
     {
         public static Texture2D emptyTex;
-        public TextureManager(ContentManager content)
+        public static Texture2D wallTex;
+        public static void Load(ContentManager content)
         {
+            wallTex = content.Load<Texture2D>(@"empty");
             emptyTex = content.Load<Texture2D>(@"empty(1)");
         }
     }
