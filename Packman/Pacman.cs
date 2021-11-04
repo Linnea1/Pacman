@@ -18,6 +18,7 @@ namespace Packman
 
         float speed = 100.0f;
         bool moving = false;
+        bool isMoving = true;
 
         double timeSinceLastFrames;
         double timeBetweenFrames;
@@ -106,6 +107,10 @@ namespace Packman
             {
                 destination = newDestination;
                 moving = true;
+            }
+            else if (Game1.GetTileAtPos(newDestination))
+            {
+                isMoving = false;
             }
         }
     }
