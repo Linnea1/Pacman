@@ -13,12 +13,11 @@ namespace Packman
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        public static Texture2D wallTex;
-        Texture2D emptyTex;
-
         static Tile[,] tileArray;
 
         List<string> strings;
+
+        Pacman pacman;
 
         enum Gamestate
         {
@@ -72,6 +71,11 @@ namespace Packman
                     {
                         tileArray[l, c] = new Tile( new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, true);
                     }
+                    if (strings[c][l] == 'P')
+                    {
+                        tileArray[l, c] = new Tile(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, true);
+                        pacman = new Pacman(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex);
+                    }
                 }
             }
             
@@ -89,7 +93,9 @@ namespace Packman
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
+
+            pacman.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -109,7 +115,7 @@ namespace Packman
         }
         public static bool GetTileAtPos(Vector2 tilePosition)
         {
-            return tileArray[(int)tilePosition.X / wallTex.Width, (int)tilePosition.Y / wallTex.Height].wall;
+            return tileArray[(int)tilePosition.X / TextureManager.wallTex.Width, (int)tilePosition.Y / TextureManager.wallTex.Height].wall;
         }
     }
 }

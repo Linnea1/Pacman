@@ -23,5 +23,9 @@ namespace Packman
         {
             spriteBatch.Draw(texture, pos, Color.White);
         }
+        public virtual void Update(GameTime gameTime)
+        {
+            
+        }
     }
 }
