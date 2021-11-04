@@ -69,12 +69,12 @@ namespace Packman
                     }
                     if (strings[c][l] == '-')
                     {
-                        tileArray[l, c] = new Tile( new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, true);
+                        tileArray[l, c] = new Tile( new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, false);
                     }
                     if (strings[c][l] == 'P')
                     {
-                        tileArray[l, c] = new Tile(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, true);
-                        pacman = new Pacman(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex);
+                        tileArray[l, c] = new Tile(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, false);
+                        pacman = new Pacman(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.pacmanTex);
                     }
                 }
             }
@@ -96,6 +96,7 @@ namespace Packman
 
             pacman.Update(gameTime);
 
+
             base.Update(gameTime);
         }
 
@@ -105,10 +106,12 @@ namespace Packman
             GraphicsDevice.Clear(Color.MistyRose);
 
             spriteBatch.Begin();
+            
             foreach (Tile tile in tileArray)
             {
                 tile.Draw(spriteBatch);
             }
+            pacman.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

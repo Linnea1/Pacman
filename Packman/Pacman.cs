@@ -14,15 +14,26 @@ namespace Packman
         Vector2 destination;
         Vector2 direction;
 
-        Texture2D walkingTex;
+        Texture2D texture;
 
         float speed = 100.0f;
         bool moving = false;
 
+        double timeSinceLastFrames;
+        double timeBetweenFrames;
+        Point sheetSize;
+        Point frameSize;
+        Point currentFrame;
+
         public Rectangle pacmanRect;
         public Pacman(Vector2 pos, Texture2D texture) : base(pos, texture)
         {
-
+            this.timeSinceLastFrames = 0;
+            this.timeBetweenFrames = 0.1;
+            this.sheetSize = new Point(3, 1);
+            this.frameSize = new Point(40, 40);
+            this.currentFrame = new Point(0, 5);
+            this.texture = texture;
         }
         public override void Update(GameTime gameTime)
         {
@@ -57,13 +68,31 @@ namespace Packman
                     moving = false;
                 }
             }
+            timeSinceLastFrames += gameTime.ElapsedGameTime.TotalSeconds;
+            if (timeSinceLastFrames >= timeBetweenFrames)
+            {
+                timeSinceLastFrames -= timeBetweenFrames;
+                currentFrame.X++;
+                if (currentFrame.X > sheetSize.X)
+                {
+                    currentFrame.X = 0;
+
+
+                    if (currentFrame.Y > sheetSize.Y)
+                    {
+                        currentFrame.Y = 0;
+
+                    }
+                }
+            }
             base.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-           
-            base.Draw(spriteBatch);
+            Rectangle frame = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
+            spriteBatch.Draw(texture, pos, frame, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            
         }
 
         
