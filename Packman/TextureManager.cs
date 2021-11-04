@@ -12,10 +12,10 @@ namespace Packman
 {
     class TextureManager
     {
-        public static Texture2D pacmanTex;
+        public static Texture2D emptyTex;
         public TextureManager(ContentManager content)
         {
-            pacmanTex = content.Load<Texture2D>(@"");
+            emptyTex = content.Load<Texture2D>(@"empty(1)");
         }
     }
     

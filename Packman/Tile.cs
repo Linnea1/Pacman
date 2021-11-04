@@ -20,9 +20,10 @@ namespace Packman
         {
             this.wall = wall;
         }
-        public void Draw(SpriteBatch spriteBatch)
+
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(mapTex, pos, Color.White);
+            base.Draw(spriteBatch);
         }
     }
 }

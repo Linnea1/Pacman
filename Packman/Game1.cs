@@ -50,7 +50,7 @@ namespace Packman
             Load();
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            ReadFromFile("packman.txt");
+            ReadFromFile("pacman.txt");
             StreamReader file = new StreamReader("packman.txt");
             strings = new List<string>();
             while (!file.EndOfStream)
@@ -70,7 +70,7 @@ namespace Packman
                     }
                     if (strings[c][l] == '-')
                     {
-                        tileArray[l, c] = new Tile( new Vector2(wallTex.Width * l, wallTex.Height * c), emptyTex, true);
+                        tileArray[l, c] = new Tile( new Vector2(wallTex.Width * l, wallTex.Height * c), TextureManager.emptyTex, true);
                     }
                 }
             }
@@ -83,7 +83,7 @@ namespace Packman
         public void Load()
         {
             wallTex = Content.Load<Texture2D>(@"empty");
-            emptyTex = Content.Load<Texture2D>(@"empty(1)");
+            //emptyTex = Content.Load<Texture2D>(@"empty(1)");
         }
         //---------------------------------------------------UPDATE--------------------------------------------------------------//
         protected override void Update(GameTime gameTime)

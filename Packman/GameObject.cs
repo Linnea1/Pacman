@@ -19,7 +19,7 @@ namespace Packman
             this.texture = texture;
         }
 
-        public virtual void Draw(Content)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, pos, Color.White);
         }
