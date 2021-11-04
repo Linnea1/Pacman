@@ -66,11 +66,11 @@ namespace Packman
                 {
                     if (strings[c][l] == 'W')
                     {
-                        tileArray[l, c] = new Tile(wallTex, new Vector2(wallTex.Width * l, wallTex.Height * c), true);
+                        tileArray[l, c] = new Tile( new Vector2(wallTex.Width * l, wallTex.Height * c), wallTex, true);
                     }
                     if (strings[c][l] == '-')
                     {
-                        tileArray[l, c] = new Tile(emptyTex, new Vector2(wallTex.Width * l, wallTex.Height * c), true);
+                        tileArray[l, c] = new Tile( new Vector2(wallTex.Width * l, wallTex.Height * c), emptyTex, true);
                     }
                 }
             }

@@ -5,15 +5,17 @@ using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Xna.Framework.Content;
+
 
 namespace Packman
 {
     class TextureManager
     {
-        Texture2D packmanTex;
-        public TextureManager(Texture2D packmanTex)
+        public static Texture2D pacmanTex;
+        public TextureManager(ContentManager content)
         {
-            //this.packmanTex = Content.Load<Texture2D>();
+            pacmanTex = content.Load<Texture2D>(@"");
         }
     }
     

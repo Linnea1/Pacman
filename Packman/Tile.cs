@@ -16,7 +16,7 @@ namespace Packman
 
         public bool wall;
 
-        public Tile(Vector2 pos, Texture2D texture) : base(pos, texture)
+        public Tile(Vector2 pos, Texture2D texture,bool wall) : base(pos, texture)
         {
             this.wall = wall;
         }
