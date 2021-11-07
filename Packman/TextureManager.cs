@@ -15,11 +15,13 @@ namespace Packman
         public static Texture2D emptyTex;
         public static Texture2D wallTex;
         public static Texture2D pacmanTex;
+        public static Texture2D foodTex;
         public static void Load(ContentManager content)
         {
             wallTex = content.Load<Texture2D>(@"empty");
             emptyTex = content.Load<Texture2D>(@"empty(1)");
             pacmanTex = content.Load<Texture2D>(@"pacman");
+            foodTex = content.Load<Texture2D>(@"empty(2)");
         }
     }
     

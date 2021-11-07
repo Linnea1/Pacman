@@ -16,6 +16,7 @@ namespace Packman
         static Tile[,] tileArray;
 
         List<string> strings;
+        List<Food> foodList;
 
         Pacman pacman;
 
@@ -24,6 +25,7 @@ namespace Packman
             Start,
             Play,
             GameOver,
+
             Won,
         }
 
@@ -36,7 +38,7 @@ namespace Packman
 
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = 900;
+            graphics.PreferredBackBufferWidth = /*TextureManager.wallTex.Width*tileArray.GetLength(0)*/ 900;
             graphics.PreferredBackBufferHeight = 680;
             graphics.ApplyChanges();
 
@@ -52,6 +54,7 @@ namespace Packman
             ReadFromFile("pacman.txt");
             StreamReader file = new StreamReader("pacman.txt");
             strings = new List<string>();
+            foodList = new List<Food>();
             while (!file.EndOfStream)
             {
                 strings.Add(file.ReadLine());
@@ -70,6 +73,7 @@ namespace Packman
                     if (strings[c][l] == '-')
                     {
                         tileArray[l, c] = new Tile( new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, false);
+                        foodList.Add(new Food(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.foodTex));
                     }
                     if (strings[c][l] == 'P')
                     {
@@ -95,9 +99,20 @@ namespace Packman
                 Exit();
 
             pacman.Update(gameTime);
+            for (int i = 0; i < foodList.Count; i++)
+            {
+                foodList[i].Update(gameTime);
+            }
+            foreach (Food f in foodList)
+            {
+                if (pacman.pacmanRect.Intersects(f.foodRect) == true)
+                {
+                    foodList.Remove(f);
+                }
+                break;
+            }
 
-
-            base.Update(gameTime);
+                base.Update(gameTime);
         }
 
         //-----------------------------------------------------DRAW----------------------------------------------------------------//
@@ -110,6 +125,11 @@ namespace Packman
             foreach (Tile tile in tileArray)
             {
                 tile.Draw(spriteBatch);
+            }
+            
+            for (int i = 0; i < foodList.Count; i++)
+            {
+                foodList[i].Draw(spriteBatch);
             }
             pacman.Draw(spriteBatch);
             spriteBatch.End();

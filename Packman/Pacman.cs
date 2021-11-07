@@ -17,8 +17,11 @@ namespace Packman
         Texture2D texture;
 
         float speed = 100.0f;
+        float rotation;
         bool moving = false;
         bool isMoving = true;
+
+        SpriteEffects pacmanFx;
 
         double timeSinceLastFrames;
         double timeBetweenFrames;
@@ -35,23 +38,29 @@ namespace Packman
             this.frameSize = new Point(40, 40);
             this.currentFrame = new Point(0, 5);
             this.texture = texture;
+            this.pacmanFx = SpriteEffects.None;
+            this.rotation = 0;
         }
         public override void Update(GameTime gameTime)
         {
+            pacmanRect = new Rectangle((int)pos.X, (int)pos.Y, texture.Width / 4, texture.Height);
             if (!moving)
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Left))
                 {
                     ChangeDirection(new Vector2(-1, 0));
+                    pacmanFx= SpriteEffects.FlipHorizontally;
                 }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Right))
                 {
                     ChangeDirection(new Vector2(1, 0));
+                    pacmanFx = SpriteEffects.None;
 
                 }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Up))
                 {
                     ChangeDirection(new Vector2(0, -1));
+                    //rotation = MathHelper.ToRadians(-90);
                 }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Down))
                 {
@@ -82,7 +91,6 @@ namespace Packman
                     if (currentFrame.Y > sheetSize.Y)
                     {
                         currentFrame.Y = 0;
-
                     }
                 }
             }
@@ -92,7 +100,8 @@ namespace Packman
         public override void Draw(SpriteBatch spriteBatch)
         {
             Rectangle frame = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
-            spriteBatch.Draw(texture, pos, frame, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            spriteBatch.Draw(texture, pos, frame, Color.White, rotation, new Vector2(0,0), 1f, pacmanFx, 1f);
+
             
         }
 
