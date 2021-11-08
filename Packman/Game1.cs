@@ -15,10 +15,13 @@ namespace Packman
 
         static Tile[,] tileArray;
 
+        int points;
+
         List<string> strings;
         List<Food> foodList;
 
         Pacman pacman;
+        Ghost ghost;
 
         enum Gamestate
         {
@@ -72,13 +75,18 @@ namespace Packman
                     }
                     if (strings[c][l] == '-')
                     {
-                        tileArray[l, c] = new Tile( new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, false);
+                        tileArray[l, c] = new Tile( new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, false,true);
                         foodList.Add(new Food(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.foodTex));
                     }
                     if (strings[c][l] == 'P')
                     {
-                        tileArray[l, c] = new Tile(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, false);
-                        pacman = new Pacman(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.pacmanTex);
+                        tileArray[l, c] = new Tile(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, false, true);
+                        pacman = new Pacman(new Vector2(TextureManager.wallTex.Width * l+20, TextureManager.wallTex.Height * c+20), TextureManager.pacmanTex);
+                    }
+                    if (strings[c][l] == 'G')
+                    {
+                        tileArray[l, c] = new Tile(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.emptyTex, false,true);
+                        ghost = new Ghost(new Vector2(TextureManager.wallTex.Width * l, TextureManager.wallTex.Height * c), TextureManager.ghostTex);
                     }
                 }
             }
@@ -99,17 +107,23 @@ namespace Packman
                 Exit();
 
             pacman.Update(gameTime);
-            for (int i = 0; i < foodList.Count; i++)
-            {
-                foodList[i].Update(gameTime);
-            }
+            ghost.Update(gameTime);
+            //for (int i = 0; i < foodList.Count; i++)
+            //{
+            //    foodList[i].Update(gameTime);
+            //}
             foreach (Food f in foodList)
             {
+                f.Update(gameTime);
                 if (pacman.pacmanRect.Intersects(f.foodRect) == true)
                 {
-                    foodList.Remove(f);
+                    f.isActive = false;
+                    f.isCollected = true;
+                    if (f.isCollected == true)
+                    {
+                        points++;
+                    }
                 }
-                break;
             }
 
                 base.Update(gameTime);
@@ -131,7 +145,9 @@ namespace Packman
             {
                 foodList[i].Draw(spriteBatch);
             }
+            ghost.Draw(spriteBatch);
             pacman.Draw(spriteBatch);
+            
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -139,6 +155,10 @@ namespace Packman
         public static bool GetTileAtPos(Vector2 tilePosition)
         {
             return tileArray[(int)tilePosition.X / TextureManager.wallTex.Width, (int)tilePosition.Y / TextureManager.wallTex.Height].wall;
+        }
+        public static bool GetPathAtPos(Vector2 tilePosition)
+        {
+            return tileArray[(int)tilePosition.X / TextureManager.wallTex.Width, (int)tilePosition.Y / TextureManager.wallTex.Height].path;
         }
     }
 }

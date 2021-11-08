@@ -14,10 +14,14 @@ namespace Packman
     {
         Texture2D texture;
         public Rectangle foodRect;
+        public bool isActive;
+        public bool isCollected;
 
         public Food(Vector2 pos, Texture2D texture) : base(pos, texture)
         {
             this.texture = texture;
+            isActive = true;
+            isCollected = false;
         }
 
         public override void Update(GameTime gameTime)
@@ -26,7 +30,10 @@ namespace Packman
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, pos, Color.White);
+            if (isActive == true)
+            {
+                spriteBatch.Draw(texture, pos, Color.White);
+            }
             
         }
     }

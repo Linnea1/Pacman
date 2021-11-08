@@ -8,7 +8,7 @@ using System.IO;
 using Microsoft.Xna.Framework.Content;
 using Packman;
 
-namespace Pacman
+namespace Packman
 {
     class Ghost:GameObject
     {
@@ -17,9 +17,8 @@ namespace Pacman
 
         Texture2D texture;
 
-        float speed = 100.0f;
+        float speed;
         bool moving = false;
-        bool isMoving = true;
 
         double timeSinceLastFrames;
         double timeBetweenFrames;
@@ -32,10 +31,40 @@ namespace Pacman
         {
             this.timeSinceLastFrames = 0;
             this.timeBetweenFrames = 0.1;
-            this.sheetSize = new Point(3, 1);
-            this.frameSize = new Point(40, 40);
+            this.sheetSize = new Point(1, 1);
+            this.frameSize = new Point(38, 40);
             this.currentFrame = new Point(0, 5);
             this.texture = texture;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (!moving)
+            {
+
+            }
+                timeSinceLastFrames += gameTime.ElapsedGameTime.TotalSeconds;
+            if (timeSinceLastFrames >= timeBetweenFrames)
+            {
+                timeSinceLastFrames -= timeBetweenFrames;
+                currentFrame.X++;
+                if (currentFrame.X > sheetSize.X)
+                {
+                    currentFrame.X = 0;
+
+
+                    if (currentFrame.Y > sheetSize.Y)
+                    {
+                        currentFrame.Y = 0;
+                    }
+                }
+            }
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Rectangle frame = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
+            spriteBatch.Draw(texture, pos, frame, Color.White);
+            //spriteBatch.Draw(texture, pos, Color.White);
         }
     }
 }

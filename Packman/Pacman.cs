@@ -16,10 +16,9 @@ namespace Packman
 
         Texture2D texture;
 
-        float speed = 100.0f;
+        float speed;
         float rotation;
         bool moving = false;
-        bool isMoving = true;
 
         SpriteEffects pacmanFx;
 
@@ -43,40 +42,49 @@ namespace Packman
         }
         public override void Update(GameTime gameTime)
         {
-            pacmanRect = new Rectangle((int)pos.X, (int)pos.Y, texture.Width / 4, texture.Height);
+            pacmanRect = new Rectangle((int)pos.X, (int)pos.Y, 20, 20);
             if (!moving)
             {
+                
                 if (Keyboard.GetState().IsKeyDown(Keys.Left))
                 {
-                    ChangeDirection(new Vector2(-1, 0));
+                    direction=new Vector2(-1, 0);
+                    rotation = 0;
                     pacmanFx= SpriteEffects.FlipHorizontally;
                 }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Right))
                 {
-                    ChangeDirection(new Vector2(1, 0));
+                    direction=new Vector2(1, 0);
+                    rotation = 0;
                     pacmanFx = SpriteEffects.None;
 
                 }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Up))
                 {
-                    ChangeDirection(new Vector2(0, -1));
-                    //rotation = MathHelper.ToRadians(-90);
+                    direction=new Vector2(0, -1);
+                    rotation = MathHelper.ToRadians(-90);
+                    pacmanFx = SpriteEffects.None;
                 }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Down))
                 {
-                    ChangeDirection(new Vector2(0, 1));
+                    direction=new Vector2(0, 1);
+                    rotation = MathHelper.ToRadians(90);
+                    pacmanFx = SpriteEffects.None;
                 }
+                ChangeDirection(direction);
             }
             else
             {
                 pos += direction * speed *
                 (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                if (Vector2.Distance(pos, destination) < 1)
-                {
-                    pos = destination;
-                    moving = false;
-                }
+                
+            }
+            if (Vector2.Distance(pos, destination) <= 1)
+            {
+                pos = destination;
+                moving = false;
+
             }
             timeSinceLastFrames += gameTime.ElapsedGameTime.TotalSeconds;
             if (timeSinceLastFrames >= timeBetweenFrames)
@@ -100,9 +108,7 @@ namespace Packman
         public override void Draw(SpriteBatch spriteBatch)
         {
             Rectangle frame = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
-            spriteBatch.Draw(texture, pos, frame, Color.White, rotation, new Vector2(0,0), 1f, pacmanFx, 1f);
-
-            
+            spriteBatch.Draw(texture, pos, frame, Color.White, rotation, new Vector2(20,20), 1f, pacmanFx, 1f);
         }
 
         
@@ -110,16 +116,17 @@ namespace Packman
         {
             direction = dir;
             Vector2 newDestination = pos + direction * 40;
+            destination = newDestination;
 
-
-            if (!Game1.GetTileAtPos(newDestination))
+            if (Game1.GetPathAtPos(newDestination))
             {
-                destination = newDestination;
                 moving = true;
+                speed=40*2;
+                
             }
-            else if (Game1.GetTileAtPos(newDestination))
+            if (Game1.GetTileAtPos(newDestination))
             {
-                isMoving = false;
+                moving = false;
             }
         }
     }
