@@ -41,9 +41,22 @@ namespace Packman
         {
             if (!moving)
             {
+                direction = new Vector2(-1, 0);
+            }
+            else
+            {
+                pos += direction * speed *
+                (float)gameTime.ElapsedGameTime.TotalSeconds;
+
 
             }
-                timeSinceLastFrames += gameTime.ElapsedGameTime.TotalSeconds;
+            if (Vector2.Distance(pos, destination) <= 1)
+            {
+                pos = destination;
+                moving = false;
+
+            }
+            timeSinceLastFrames += gameTime.ElapsedGameTime.TotalSeconds;
             if (timeSinceLastFrames >= timeBetweenFrames)
             {
                 timeSinceLastFrames -= timeBetweenFrames;
@@ -64,7 +77,24 @@ namespace Packman
         {
             Rectangle frame = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
             spriteBatch.Draw(texture, pos, frame, Color.White);
-            //spriteBatch.Draw(texture, pos, Color.White);
+            
+        }
+        public void ChangeDirection(Vector2 dir)
+        {
+            direction = dir;
+            Vector2 newDestination = pos + direction * 40;
+            destination = newDestination;
+
+            if (Game1.GetPathAtPos(newDestination))
+            {
+                moving = true;
+                speed = 40 * 2;
+
+            }
+            if (Game1.GetTileAtPos(newDestination))
+            {
+                moving = false;
+            }
         }
     }
 }
