@@ -15,6 +15,7 @@ namespace Packman
         Vector2 direction;
 
         Texture2D texture;
+        Pacman pacman;
 
         float speed;
         float rotation;
@@ -122,7 +123,6 @@ namespace Packman
             {
                 moving = true;
                 speed=40*2;
-                
             }
             if (Game1.GetTileAtPos(newDestination))
             {

@@ -15,8 +15,10 @@ namespace Packman
         Vector2 destination;
         Vector2 direction;
 
+        Random rnd = new Random();
         Texture2D texture;
 
+        int num;
         float speed;
         bool moving = false;
 
@@ -26,7 +28,16 @@ namespace Packman
         Point frameSize;
         Point currentFrame;
 
-        public Rectangle pacmanRect;
+        enum GhostDir
+        {
+            TurnLeft,
+            TurnRight,
+            GoUp,
+            GoDown,
+        }
+        GhostDir currentState = GhostDir.TurnLeft;
+
+        public Rectangle ghostRect;
         public Ghost(Vector2 pos, Texture2D texture) : base(pos, texture)
         {
             this.timeSinceLastFrames = 0;
@@ -35,27 +46,103 @@ namespace Packman
             this.frameSize = new Point(38, 40);
             this.currentFrame = new Point(0, 5);
             this.texture = texture;
+            
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (!moving)
+            ghostRect = new Rectangle((int)pos.X, (int)pos.Y, texture.Width/2, texture.Height);
+            switch (currentState)
             {
-                direction = new Vector2(-1, 0);
-            }
-            else
-            {
-                pos += direction * speed *
-                (float)gameTime.ElapsedGameTime.TotalSeconds;
+                case GhostDir.TurnLeft:
+                    
+                    if (!moving)
+                    {
+                        ChangeDirection(new Vector2(-1, 0));
+
+                        if (!moving)
+                        {
+                            currentState = GhostDir.GoDown;
+                        }
+                    }
+                    else
+                    {
+                        pos += direction * speed *
+                        (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+                    if (Vector2.Distance(pos, destination) <= 1)
+                    {
+                        pos = destination;
+                        moving = false;
+                    }
+                    break;
+                    
+                case GhostDir.GoDown:
+                    if (!moving)
+                    {
+                        ChangeDirection(new Vector2(0, 1));
+                        if (!moving)
+                        {
+                            currentState = GhostDir.TurnRight;
+                        }
+                    }
+                    else
+                    {
+                        pos += direction * speed *
+                        (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+                    if (Vector2.Distance(pos, destination) <= 1)
+                    {
+                        pos = destination;
+                        moving = false;
+                    }
+                    break;
+
+                case GhostDir.TurnRight:
+                    if (!moving)
+                    {
+                        ChangeDirection(new Vector2(1, 0));
+                        if (!moving)
+                        {
+                            currentState = GhostDir.GoUp;
+                        }
+                    }
+                    else
+                    {
+                        pos += direction * speed *
+                        (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+                    if (Vector2.Distance(pos, destination) <= 1)
+                    {
+                        pos = destination;
+                        moving = false;
+                    }
+                    break;
+                case GhostDir.GoUp:
+                    if (!moving)
+                    {
+                        ChangeDirection(new Vector2(0, -1));
+                        if (!moving)
+                        {
+                            currentState = GhostDir.TurnLeft;
+                        }
+                    }
+                    else
+                    {
+                        pos += direction * speed *
+                        (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+                    if (Vector2.Distance(pos, destination) <= 1)
+                    {
+                        pos = destination;
+                        moving = false;
+                    }
+                    break;
 
 
+                   
             }
-            if (Vector2.Distance(pos, destination) <= 1)
-            {
-                pos = destination;
-                moving = false;
-
-            }
+           
             timeSinceLastFrames += gameTime.ElapsedGameTime.TotalSeconds;
             if (timeSinceLastFrames >= timeBetweenFrames)
             {
@@ -77,7 +164,6 @@ namespace Packman
         {
             Rectangle frame = new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y);
             spriteBatch.Draw(texture, pos, frame, Color.White);
-            
         }
         public void ChangeDirection(Vector2 dir)
         {
@@ -89,7 +175,6 @@ namespace Packman
             {
                 moving = true;
                 speed = 40 * 2;
-
             }
             if (Game1.GetTileAtPos(newDestination))
             {
